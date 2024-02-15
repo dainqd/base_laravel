@@ -58,32 +58,36 @@
                                     <p class="text-center small">Enter your personal details to create account</p>
                                 </div>
 
-                                <form class="row g-3 needs-validation" novalidate>
+                                <form class="row g-3 needs-validation" novalidate method="post" action="{{ route('auth.register') }}">
+                                    @csrf
                                     <div class="col-12">
-                                        <label for="yourName" class="form-label">Your Name</label>
-                                        <input type="text" name="name" class="form-control" id="yourName" required>
+                                        <label for="name" class="form-label">Your Name</label>
+                                        <input type="text" name="name" class="form-control" id="name" required>
                                         <div class="invalid-feedback">Please, enter your name!</div>
                                     </div>
 
                                     <div class="col-12">
-                                        <label for="yourEmail" class="form-label">Your Email</label>
-                                        <input type="email" name="email" class="form-control" id="yourEmail" required>
-                                        <div class="invalid-feedback">Please enter a valid Email adddress!</div>
+                                        <label for="email" class="form-label">Your Email</label>
+                                        <input type="email" name="email" class="form-control" id="email" required>
+                                        <div class="invalid-feedback">Please, enter your email!</div>
                                     </div>
 
                                     <div class="col-12">
-                                        <label for="yourUsername" class="form-label">Username</label>
-                                        <div class="input-group has-validation">
-                                            <span class="input-group-text" id="inputGroupPrepend">@</span>
-                                            <input type="text" name="username" class="form-control" id="yourUsername" required>
-                                            <div class="invalid-feedback">Please choose a username.</div>
-                                        </div>
+                                        <label for="username" class="form-label">Username</label>
+                                        <input type="text" name="username" class="form-control" id="username" required>
+                                        <div class="invalid-feedback">Please, enter your username!</div>
                                     </div>
 
                                     <div class="col-12">
-                                        <label for="yourPassword" class="form-label">Password</label>
-                                        <input type="password" name="password" class="form-control" id="yourPassword" required>
-                                        <div class="invalid-feedback">Please enter your password!</div>
+                                        <label for="password" class="form-label">Password</label>
+                                        <input type="password" name="password" class="form-control" id="password" required>
+                                        <div class="invalid-feedback">Please, enter your password!</div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="password_confirm" class="form-label">Password Confirm</label>
+                                        <input type="password" name="password_confirm" class="form-control" id="password_confirm" required>
+                                        <div class="invalid-feedback">Please, enter your password confirm!</div>
                                     </div>
 
                                     <div class="col-12">

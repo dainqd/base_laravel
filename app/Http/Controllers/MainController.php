@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\RoleName;
+use App\Models\Role;
+use App\Models\RoleUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -87,5 +90,14 @@ class MainController extends Controller
 
         return $str;
 
+    }
+
+    public function saveRoleUser($user_id)
+    {
+        $role = Role::where('name', RoleName::USER)->first();
+        $user_role = new RoleUser();
+        $user_role->role_id = $role->id;
+        $user_role->user_id = $user_id;
+        $user_role->save();
     }
 }
