@@ -15,7 +15,9 @@
 
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+        rel="stylesheet">
 
     <!-- Vendor CSS Files -->
     <link href="{{ asset('admin/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -28,9 +30,11 @@
 
     <!-- Template Main CSS File -->
     <link href="{{ asset('admin/css/style.css') }}" rel="stylesheet">
+    <script src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js"></script>
 </head>
 
 <body>
+@include('sweetalert::alert')
 
 <!-- ======= Main ======= -->
 <main>
@@ -57,26 +61,24 @@
                                     <p class="text-center small">Enter your username & password to login</p>
                                 </div>
 
-                                <form class="row g-3 needs-validation" novalidate>
-
+                                <form class="row g-3 needs-validation" action="{{ route('auth.login') }}" method="post">
+                                    @csrf
                                     <div class="col-12">
-                                        <label for="yourUsername" class="form-label">Username</label>
-                                        <div class="input-group has-validation">
-                                            <span class="input-group-text" id="inputGroupPrepend">@</span>
-                                            <input type="text" name="username" class="form-control" id="yourUsername" required>
-                                            <div class="invalid-feedback">Please enter your username.</div>
-                                        </div>
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" name="email" class="form-control" id="email"
+                                               required>
                                     </div>
 
                                     <div class="col-12">
-                                        <label for="yourPassword" class="form-label">Password</label>
-                                        <input type="password" name="password" class="form-control" id="yourPassword" required>
-                                        <div class="invalid-feedback">Please enter your password!</div>
+                                        <label for="password" class="form-label">Password</label>
+                                        <input type="password" name="password" class="form-control" id="password"
+                                               required>
                                     </div>
 
                                     <div class="col-12">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
+                                            <input class="form-check-input" type="checkbox" name="remember" value="true"
+                                                   id="rememberMe">
                                             <label class="form-check-label" for="rememberMe">Remember me</label>
                                         </div>
                                     </div>
@@ -84,7 +86,8 @@
                                         <button class="btn btn-primary w-100" type="submit">Login</button>
                                     </div>
                                     <div class="col-12">
-                                        <p class="small mb-0">Don't have account? <a href="{{ route('auth.processRegister') }}">Create an account</a></p>
+                                        <p class="small mb-0">Don't have account? <a
+                                                href="{{ route('auth.processRegister') }}">Create an account</a></p>
                                     </div>
                                 </form>
 
@@ -105,7 +108,8 @@
 </main>
 <!-- End #main -->
 
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+        class="bi bi-arrow-up-short"></i></a>
 
 <!-- Vendor JS Files -->
 <script src="{{ asset('admin/vendor/apexcharts/apexcharts.min.js') }}"></script>

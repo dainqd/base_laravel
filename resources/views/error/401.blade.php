@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Forbidden 403</title>
+    <title>Unauthorized 401</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -39,8 +39,8 @@
     <div class="container">
 
         <section class="section error-404 min-vh-100 d-flex flex-column align-items-center justify-content-center">
-            <h1>403</h1>
-            <h2>Forbidden.</h2>
+            <h1>401</h1>
+            <h2>Unauthorized.</h2>
             <a class="btn" href="{{ route('home') }}">Back to home</a>
             <img src="{{ asset('admin/img/not-found.svg') }}" class="img-fluid py-5" alt="Page Not Found">
             <div class="credits">

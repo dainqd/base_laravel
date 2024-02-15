@@ -28,10 +28,11 @@
 
     <!-- Template Main CSS File -->
     <link href="{{ asset('admin/css/style.css') }}" rel="stylesheet">
+    <script src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js"></script>
 </head>
 
 <body>
-
+@include('sweetalert::alert')
 <!-- ======= Main ======= -->
 <main>
     <div class="container">
