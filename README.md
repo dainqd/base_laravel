@@ -15,7 +15,7 @@ You can run it locally by following these steps:
 4.  In your browser, visit http://localhost/phpmyadmin and create a new database with  collation utf8mb4_unicode_ci, then import the attached .sql file (optional)
 5.  Download the source code and open it on your IDE (such as PHPStorm)
 6.  Install dependencies: composer install
-7.  Create env file: copy .env.example .env
+7.  Create env file: cp .env.example .env
 8.  Update database credentials in .env file
 9.  Run migration if you have not imported the sql file: php artisan migrate:fresh --seed
 10.  Generate app key: php artisan key:generate
