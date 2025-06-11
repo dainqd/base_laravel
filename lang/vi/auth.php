@@ -26,5 +26,6 @@ return [
     'already_have_account' => 'Bạn đã có tài khoản?',
     'login' => 'Đăng nhập',
     'create_account' => 'Tạo tài khoản',
+    'forgot_password' => 'Quên mật khẩu?',
     '' => '',
 ];

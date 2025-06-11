@@ -23,10 +23,10 @@ Route::fallback(function () {
 });
 
 Route::group(['prefix' => 'auth'], function () {
-    Route::get('/login', [AuthController::class, 'processLogin'])->name('auth.processLogin');
-    Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
-    Route::get('/register', [AuthController::class, 'processRegister'])->name('auth.processRegister');
-    Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
+    Route::get('/login', [AuthController::class, 'login'])->name('auth.login');
+    Route::post('/login', [AuthController::class, 'processLogin'])->name('auth.processLogin');
+    Route::get('/register', [AuthController::class, 'register'])->name('auth.register');
+    Route::post('/register', [AuthController::class, 'processRegister'])->name('auth.processRegister');
     Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 });
 
@@ -41,15 +41,15 @@ Route::group(['prefix' => ''], function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-
+    require_once __DIR__ . '/webapp/auth.php';
 });
 
-Route::group(['prefix' => '', 'middleware' => ['ui.moderator']], function () {
-
+Route::group(['prefix' => 'moderator', 'middleware' => ['ui.moderator']], function () {
+    require_once __DIR__ . '/webapp/moderator.php';
 });
 
-Route::group(['prefix' => '', 'middleware' => ['ui.admin']], function () {
-
+Route::group(['prefix' => 'admin', 'middleware' => ['ui.admin']], function () {
+    require_once __DIR__ . '/webapp/admin.php';
 });
 
 /* End web */

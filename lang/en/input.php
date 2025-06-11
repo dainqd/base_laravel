@@ -15,6 +15,7 @@ return [
 
     'Email' => 'Email',
     'email_message' => 'Please, enter your email!',
+    'phone_message' => 'Please, enter your phone!',
     'Password' => 'Password',
     'password_message' => 'Please, enter your password!',
     'Your_Name' => 'Your Name',
@@ -25,5 +26,6 @@ return [
     'Password_Confirm' => 'Password Confirm',
     'password_confirm_message' => 'Please, enter your password confirm!',
     'message_must_agree' => 'You must agree before submitting.',
+    'Phone' => 'Phone',
     '' => '',
 ];

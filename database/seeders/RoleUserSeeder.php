@@ -20,9 +20,9 @@ class RoleUserSeeder extends Seeder
         $modRole = Role::where('name', RoleName::MODERATOR)->first();
         $userRole = Role::where('name', RoleName::USER)->first();
 
-        $admin = User::where('email', 'admin@gmail.com')->first();
-        $mod = User::where('email', 'moderator@gmail.com')->first();
-        $user = User::where('email', 'user@gmail.com')->first();
+        $admin = User::where('email', 'dainq.admin@gmail.com')->first();
+        $mod = User::where('email', 'dainq.moderator@gmail.com')->first();
+        $user = User::where('email', 'dainq.user@gmail.com')->first();
 
         $user_roles = [
             [

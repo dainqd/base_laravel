@@ -2,72 +2,105 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\RoleName;
 use App\Enums\UserStatus;
+use App\Models\Role;
+use App\Models\RoleUser;
 use App\Models\User;
+use Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use JWTAuth;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
-    public function processLogin()
-    {
-        if (Auth::check()) {
-            return redirect(route('home'));
-        }
-        return view('auth.login');
-    }
-
     public function login(Request $request)
     {
+        if (Auth::check()) {
+            return redirect(route('admin.home'));
+        }
+        $url_callback = $request->input('url_callback');
+        return view('auth.login', compact('url_callback'));
+    }
+
+    public function processLogin(Request $request)
+    {
         try {
-            $loginRequest = $request->input('email');
+            $loginRequest = $request->input('login_request');
             $password = $request->input('password');
+            $url_callback = $request->input('url_callback');
 
             $credentials = [
-                'email' => $loginRequest,
                 'password' => $password,
             ];
 
-            $user = User::where('email', $loginRequest)->first();
+            if (filter_var($loginRequest, FILTER_VALIDATE_EMAIL)) {
+                $user = User::where('email', $loginRequest)->first();
+                $credentials['email'] = $loginRequest;
+            } else {
+                $user = User::where('phone', $loginRequest)->first();
+                if ($user) {
+                    $credentials['phone'] = $loginRequest;
+                } else {
+                    $user = User::where('username', $loginRequest)->first();
+                    $credentials['username'] = $loginRequest;
+                }
+            }
+
             if (!$user) {
-                toast('Account not found!', 'error', 'top-left');
-                return back();
+                toast('User not found!', 'error', 'top-right');
+                return redirect()->back()->withInput();
+            } else {
+                if ($user->status == UserStatus::INACTIVE) {
+                    toast('User is inactive!', 'error', 'top-right');
+                    return redirect()->back()->withInput();
+                } else if ($user->status == UserStatus::BLOCKED) {
+                    toast('User has been blocked!', 'error', 'top-right');
+                    return redirect()->back()->withInput();
+                } else if ($user->status == UserStatus::DELETED) {
+                    toast('User is deleted!', 'error', 'top-right');
+                    return redirect()->back()->withInput();
+                }
             }
 
-            switch ($user->status) {
-                case UserStatus::ACTIVE:
-                    break;
-                case UserStatus::INACTIVE:
-                    toast('Account not active!', 'error', 'top-left');
-                    return back();
-                case UserStatus::BLOCKED:
-                    toast('Account has been blocked!', 'error', 'top-left');
-                    return back();
-                case UserStatus::DELETED:
-                    toast('Account has been deleted!', 'error', 'top-left');
-                    return back();
+            $roleAdmin = Role::where('name', RoleName::ADMIN)->first();
+            if (!$roleAdmin) {
+                alert()->error('Role admin not found!');
+                return redirect()->back()->withInput();
             }
 
-            if (Auth::attempt($credentials)) {
+            $user_role = RoleUser::where('user_id', $user->id)->where('role_id', $roleAdmin->id)->first();
+
+            if (\Illuminate\Support\Facades\Auth::attempt($credentials)) {
                 $token = JWTAuth::fromUser($user);
-                $user->token = $token;
+
+                $user->last_token = $token;
+                $user->last_login = now();
                 $user->save();
-                $expiration_time = time() + 86400;
-                setCookie('accessToken', $token, $expiration_time, '/');
-                toast('Welcome ' . $user->email, 'success', 'top-left');
-                return redirect(route('home'));
+
+                toast('Login success!', 'success', 'top-right');
             }
-            toast('Email or password incorrect', 'error', 'top-left');
-            return back();
+
+            if (Auth::check()) {
+                if ($url_callback) {
+                    return redirect()->to($url_callback);
+                }
+
+                if ($user_role) {
+                    return redirect()->route('admin.home');
+                }
+
+                return redirect()->route('home');
+            }
+            toast('Login fail! Please check email or password', 'error', 'top-right');
+            return redirect()->back()->withInput();
         } catch (\Exception $exception) {
-            toast('Error, Please try again!', 'error', 'top-left');
-            return back();
+            toast($exception->getMessage(), 'error', 'top-right');
+            return redirect()->back()->withInput();
         }
     }
 
-    public function processRegister()
+    public function register()
     {
         if (Auth::check()) {
             return redirect(route('home'));
@@ -75,70 +108,103 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
-    public function register(Request $request)
+    public function processRegister(Request $request)
     {
+        $newController = (new MainController());
         try {
             $name = $request->input('name');
             $email = $request->input('email');
             $username = $request->input('username');
+            $phone = $request->input('phone');
             $password = $request->input('password');
             $password_confirm = $request->input('password_confirm');
 
+            if (!$name) {
+                toast('Name is required!', 'error', 'top-right');
+                return redirect()->back()->withInput();
+            }
+
+            if (!$email) {
+                toast('Email is required!', 'error', 'top-right');
+                return redirect()->back()->withInput();
+            }
+
+            if (!$phone) {
+                toast('Phone is required!', 'error', 'top-right');
+                return redirect()->back()->withInput();
+            }
+
+            if (!$username) {
+                toast('Username is required!', 'error', 'top-right');
+                return redirect()->back()->withInput();
+            }
+
+            if (!$password) {
+                toast('Password is required!', 'error', 'top-right');
+                return redirect()->back()->withInput();
+            }
+
             $isEmail = filter_var($email, FILTER_VALIDATE_EMAIL);
             if (!$isEmail) {
-                toast('Email invalid!', 'error', 'top-left');
-                return back();
+                toast('Email invalid!', 'error', 'top-right');
+                return redirect()->back()->withInput();
             }
 
             $is_valid = User::checkEmail($email);
             if (!$is_valid) {
-                toast('Email already exited!', 'error', 'top-left');
-                return back();
+                toast('Email already exited!', 'error', 'top-right');
+                return redirect()->back()->withInput();
+            }
+
+            $is_valid = User::checkPhone($phone);
+            if (!$is_valid) {
+                toast('Phone already exited!', 'error', 'top-right');
+                return redirect()->back()->withInput();
             }
 
             $is_valid = User::checkUsername($username);
             if (!$is_valid) {
-                toast('Username already exited!', 'error', 'top-left');
-                return back();
+                toast('Username already exited!', 'error', 'top-right');
+                return redirect()->back()->withInput();
             }
 
             if ($password != $password_confirm) {
-                toast('Password or Password Confirm incorrect!', 'error', 'top-left');
-                return back();
+                toast('Password or Password Confirm incorrect!', 'error', 'top-right');
+                return redirect()->back()->withInput();
             }
 
             if (strlen($password) < 5) {
-                toast('Password invalid!', 'error', 'top-left');
-                return back();
+                toast('Password invalid!', 'error', 'top-right');
+                return redirect()->back()->withInput();
             }
 
             $passwordHash = Hash::make($password);
 
             $user = new User();
 
-            $user->full_name = $name ?? '';
-            $user->username = $username;
-            $user->phone = $contact_phone ?? '';
+            $user->full_name = $name;
+            $user->phone = $phone;
             $user->email = $email;
+            $user->username = $username;
             $user->password = $passwordHash;
-
             $user->address = '';
             $user->about = '';
+            $user->avatar = '';
             $user->status = UserStatus::ACTIVE;
 
             $success = $user->save();
 
-            (new MainController())->saveRoleUser($user->id);
+            $newController->saveRoleUser($user->id);
 
             if ($success) {
-                toast('Register success, Please login to continue...!', 'success', 'top-left');
-                return redirect(route('auth.processLogin'));
+                toast('Register success!', 'success', 'top-right');
+                return redirect(route('auth.login'));
             }
-            toast('Register error!', 'error', 'top-left');
-            return back();
+            toast('Register failed!', 'error', 'top-right');
+            return redirect()->back()->withInput();
         } catch (\Exception $exception) {
-            toast('Error, Please try again!', 'error', 'top-left');
-            return back();
+            toast($exception->getMessage(), 'error', 'top-right');
+            return redirect()->back()->withInput();
         }
     }
 
@@ -147,7 +213,7 @@ class AuthController extends Controller
         try {
             if (Auth::check()) {
                 $user = Auth::user();
-                $user->token = null;
+                $user->last_token = null;
                 $user->save();
             }
             Auth::logout();

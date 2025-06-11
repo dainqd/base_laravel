@@ -26,5 +26,6 @@ return [
     'already_have_account' => 'Already have an account?',
     'login' => 'Log in',
     'create_account' => 'Create Account',
+    'forgot_password' => 'Forgot password',
     '' => '',
 ];

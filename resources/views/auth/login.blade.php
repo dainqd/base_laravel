@@ -26,7 +26,7 @@
                                     <p class="text-center small">{{ __('auth.page_login_description') }}</p>
                                 </div>
 
-                                <form class="row g-3 needs-validation" novalidate action="{{ route('auth.login') }}"
+                                <form class="row g-3 needs-validation" novalidate action="{{ route('auth.processLogin') }}"
                                       method="post">
                                     @csrf
                                     <div class="col-12">
@@ -43,13 +43,8 @@
                                         <div class="invalid-feedback">{{ __('input.password_message') }}</div>
                                     </div>
 
-                                    <div class="col-12">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="remember" checked
-                                                   value="true" id="rememberMe">
-                                            <label class="form-check-label"
-                                                   for="rememberMe">{{ __('auth.remember_me') }}</label>
-                                        </div>
+                                    <div class="col-12 d-flex justify-content-end">
+                                        <a class="small" href="#">{{ __('auth.forgot_password') }}</a>
                                     </div>
 
                                     <input type="hidden" name="url_callback" value="{{ $url_callback }}">
@@ -57,6 +52,10 @@
                                     <div class="col-12">
                                         <button class="btn btn-primary w-100"
                                                 type="submit">{{ __('auth.page_login') }}</button>
+                                    </div>
+                                    <div class="col-12">
+                                        <p class="small mb-0">{{ __('auth.dont_have_account') }} <a
+                                                href="{{ route('auth.register') }}">{{ __('auth.create_account') }}</a></p>
                                     </div>
                                 </form>
 

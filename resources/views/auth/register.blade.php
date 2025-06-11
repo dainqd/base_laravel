@@ -27,7 +27,7 @@
                                 </div>
 
                                 <form class="row g-3 needs-validation" novalidate method="post"
-                                      action="{{ route('auth.register') }}">
+                                      action="{{ route('auth.processRegister') }}">
                                     @csrf
                                     <div class="col-12">
                                         <label for="name" class="form-label">{{ __('input.Your_Name') }}</label>
@@ -39,6 +39,12 @@
                                         <label for="email" class="form-label">{{ __('input.Your_Email') }}</label>
                                         <input type="email" name="email" class="form-control" id="email" required>
                                         <div class="invalid-feedback">{{ __('input.email_message') }}</div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="phone" class="form-label">{{ __('input.Phone') }}</label>
+                                        <input type="text" name="phone" class="form-control" id="phone" required>
+                                        <div class="invalid-feedback">{{ __('input.phone_message') }}</div>
                                     </div>
 
                                     <div class="col-12">
@@ -72,13 +78,18 @@
                                             <div class="invalid-feedback">{{ __('input.message_must_agree') }}</div>
                                         </div>
                                     </div>
+
+                                    <div class="col-12 d-flex justify-content-end">
+                                        <a class="small" href="#">{{ __('auth.forgot_password') }}</a>
+                                    </div>
+
                                     <div class="col-12">
                                         <button class="btn btn-primary w-100"
                                                 type="submit">{{ __('auth.create_account') }}</button>
                                     </div>
                                     <div class="col-12">
                                         <p class="small mb-0">{{ __('auth.already_have_account') }} <a
-                                                href="{{ route('auth.processLogin') }}">{{ __('auth.login') }}</a></p>
+                                                href="{{ route('auth.login') }}">{{ __('auth.login') }}</a></p>
                                     </div>
                                 </form>
 

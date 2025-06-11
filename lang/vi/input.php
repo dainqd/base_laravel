@@ -15,6 +15,7 @@ return [
 
     'Email' => 'Email',
     'email_message' => 'Vui lòng nhập email của bạn!',
+    'phone_message' => 'Vui lòng nhập số điện thoại của bạn!',
     'Password' => 'Mật khẩu',
     'password_message' => 'Vui lòng nhập mật khẩu của bạn!',
     'Your_Name' => 'Tên của bạn',
@@ -25,5 +26,6 @@ return [
     'Password_Confirm' => 'Xác nhận mật khẩu',
     'password_confirm_message' => 'Vui lòng nhập mật khẩu xác nhận!',
     'message_must_agree' => 'Bạn phải đồng ý trước khi gửi.',
+    'Phone' => 'Số điện thoại',
     '' => '',
 ];
